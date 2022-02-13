@@ -26,7 +26,7 @@ public class GoogleHomePage extends BasePage {
     }
 
     public void searchText(String text){
-
+        searchBox.clear();
         searchBox.sendKeys(text);
         searchBox.submit();
 
