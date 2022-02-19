@@ -1,6 +1,7 @@
 package com.farhan.basetestframework;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Reporter;
@@ -14,12 +15,17 @@ public class BaseClass {
 	private WebDriver driver;
 
 	@BeforeSuite
-	public void beforeSuite(){
+	public void beforeSuite() throws InterruptedException {
 		//Change the path of the Chrome driver to your local machine Chrome driver
 		// For Windows Machine add .exe at the end of the chromedriver
-		System.setProperty("webdriver.chrome.driver", "/Users/f.aziz/Downloads/Softwares/chromedriver/chromedriver.exe");
+		System.setProperty("webdriver.chrome.driver", "C:\\chromedriver\\chromedriver.exe");
 		driver = new ChromeDriver();
-		driver.get("http://www.google.com");
+		driver.get("https://play.crabada.com/mine");
+		//Resize current window to the set dimension
+		driver.manage().window().maximize();
+
+		//To Delay execution for 10 sec. as to view the resize browser
+		Thread.sleep(10000);
 	}
 	@BeforeClass
 	public void beforeClass() {
@@ -36,7 +42,7 @@ public class BaseClass {
 
 	@AfterSuite
 	public void afterSuite(){
-		driver.quit();
+		//driver.quit();
 	}
 
 	
