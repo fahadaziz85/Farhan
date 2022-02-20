@@ -27,9 +27,15 @@ public class BaseClass {
 		ChromeOptions options = new ChromeOptions();
 		// For Mac
 		//options.addArguments("user-data-dir=/Users/fahadaziz/Library/Application Support/Google/chrome/seleniumProfile");
+
 		// For Windows
 		//options.addArguments("user-data-dir=C:\\Users\\Username\\AppData\\Local\\Google\\Chrome\\User Data\\");
-		System.setProperty("webdriver.chrome.driver", "/Users/fahadaziz/Downloads/Softwares/chromedriver/chromedriver");
+
+		// For Mac
+		//System.setProperty("webdriver.chrome.driver", "/Users/fahadaziz/Downloads/Softwares/chromedriver/chromedriver");
+
+		// For Windows
+		System.setProperty("webdriver.chrome.driver", "C:\\Users\\f.aziz\\Downloads\\Softwares\\chromedriver\\chromedriver.exe");
 		driver = new ChromeDriver(options);
 		driver.get("https://play.crabada.com/mine");
 		//Resize current window to the set dimension
