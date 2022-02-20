@@ -13,8 +13,11 @@ public class CrabadaPage extends BasePage {
     // UI Elements / Locators
     @FindBy(className = "btn-ok")
     private WebElement connectWallet;
-    @FindBy(className = "connect-icon")
+    @FindBy(className = "ant-btn")
     private WebElement connectWalletLeftMenuButton;
+    @FindBy(className = "password")
+    private WebElement metaMaskPasswd;
+
 
     public void clickConnectWallet(){
         connectWallet.click();
@@ -22,5 +25,9 @@ public class CrabadaPage extends BasePage {
 
     public void clickConnectWalletLeftMenuButton(){
         connectWalletLeftMenuButton.click();
+    }
+
+    public void enterMetaMaskPassword(String passwd){
+        metaMaskPasswd.sendKeys(passwd);
     }
 }
