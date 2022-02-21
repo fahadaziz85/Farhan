@@ -1,6 +1,7 @@
 package com.farhan.pageobjects;
 
 import com.farhan.basetestframework.BasePage;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -15,8 +16,7 @@ public class CrabadaPage extends BasePage {
     private WebElement connectWallet;
     @FindBy(className = "ant-btn")
     private WebElement connectWalletLeftMenuButton;
-    @FindBy(className = "password")
-    private WebElement metaMaskPasswd;
+
 
 
     public void clickConnectWallet(){
@@ -24,10 +24,12 @@ public class CrabadaPage extends BasePage {
     }
 
     public void clickConnectWalletLeftMenuButton(){
-        connectWalletLeftMenuButton.click();
+        boolean flag=connectWalletLeftMenuButton.isDisplayed();
+
+        if (flag){
+            connectWalletLeftMenuButton.sendKeys(Keys.RETURN);
+        }
     }
 
-    public void enterMetaMaskPassword(String passwd){
-        metaMaskPasswd.sendKeys(passwd);
-    }
+
 }

@@ -23,19 +23,20 @@ public class BaseClass {
 	public void beforeSuite() throws InterruptedException, IOException {
 		//Change the path of the Chrome driver to your local machine Chrome driver
 		// For Windows Machine add .exe at the end of the chromedriver
-		Runtime.getRuntime().exec("killall chromedriver");
+		//Runtime.getRuntime().exec("killall chromedriver");
+		Runtime.getRuntime().exec("taskkill /F /IM chromedriver.exe /T");
 		ChromeOptions options = new ChromeOptions();
 		// For Mac
 		//options.addArguments("user-data-dir=/Users/fahadaziz/Library/Application Support/Google/chrome/seleniumProfile");
 
 		// For Windows
-		//options.addArguments("user-data-dir=C:\\Users\\Username\\AppData\\Local\\Google\\Chrome\\User Data\\");
+		//options.addArguments("user-data-dir=C:\\Users\\fbash\\AppData\\Local\\Google\\Chrome\\User Data\\");//seleniumProfile\\
 
 		// For Mac
 		//System.setProperty("webdriver.chrome.driver", "/Users/fahadaziz/Downloads/Softwares/chromedriver/chromedriver");
 
 		// For Windows
-		System.setProperty("webdriver.chrome.driver", "C:\\Users\\f.aziz\\Downloads\\Softwares\\chromedriver\\chromedriver.exe");
+		//System.setProperty("webdriver.chrome.driver", "C:\\chromedriver\\chromedriver.exe");
 		driver = new ChromeDriver(options);
 		driver.get("https://play.crabada.com/mine");
 		//Resize current window to the set dimension
