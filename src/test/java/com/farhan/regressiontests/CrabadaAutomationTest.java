@@ -3,11 +3,15 @@ package com.farhan.regressiontests;
 import com.farhan.basetestframework.BaseClass;
 import com.farhan.pageobjects.CrabadaPage;
 import com.farhan.pageobjects.MetaMaskPage;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.Test;
 
+import javax.servlet.annotation.WebListener;
 import java.io.IOException;
+import java.lang.management.ThreadInfo;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
@@ -32,22 +36,48 @@ public class CrabadaAutomationTest extends BaseClass {
             Thread.sleep(3000);
             getDriver().close();
             getDriver().switchTo().window(tabs.get(0));  // switch back to parent window
+            crab.clickDashboard();
+            Thread.sleep(3000);
+            crab.clickMiningExpedition();
+            Thread.sleep(5000);
+
+
         }
-        System.out.println("Counter value: "+ counter++);
-        getDriver().navigate().refresh();
-        crab.clickDashboard();
-        Thread.sleep(3000);
-        crab.clickMiningExpedition();
-        Thread.sleep(5000);
-        crab.clickStartMiningExpeditionsBtn();
+        /*crab.clickStartMiningExpeditionsBtn();
         Thread.sleep(5000);
         crab.clickSelectBtn();
         this.confirmMetaMaskTransaction(mask);
+        Thread.sleep(5000);
+        System.out.println("Counter value: "+ counter++);*/
+        getDriver().navigate().refresh();getDriver().navigate().refresh();
+
+
 
 
     }
 
     @Test(priority = 2)
+    public void testReinforceFunctionality() throws InterruptedException {
+        CrabadaPage crab = new CrabadaPage(getDriver());
+        MetaMaskPage mask = new MetaMaskPage(getDriver());
+        Thread.sleep(5000);
+        for (int i= 0; i <2; i++) {
+            //boolean reinforceArea = getDriver().findElement(By.className("mine-status")).getAttribute("innerHTML").equals("Ending");
+            Thread.sleep(5000);
+            WebElement reinforceArea = getDriver().findElement(By.className("mine-status"));
+            if (reinforceArea.isDisplayed()) {
+                Thread.sleep(3000);
+                crab.clickReinforce();
+                Thread.sleep(5000);
+                this.confirmMetaMaskTransaction(mask);
+                Thread.sleep(5000);
+                getDriver().navigate().refresh();
+                getDriver().get("https://play.crabada.com/mine");
+            }
+        }
+    }
+
+   // @Test(priority = 3)
     public void claimRewardWorkFlow() throws InterruptedException, IOException {
         CrabadaPage crab = new CrabadaPage(getDriver());
         MetaMaskPage mask = new MetaMaskPage(getDriver());
@@ -64,15 +94,17 @@ public class CrabadaAutomationTest extends BaseClass {
             getDriver().switchTo().window(tabs.get(0));  // switch back to parent window
         }
         System.out.println("Counter value: "+ counter++);
-        while(true) {
+        while(true) { // here you have to check the condition with maximum number of teams which you can get from manage teams page
             getDriver().navigate().refresh();
-            crab.waitForMininigExpeditionToBeFinished();
+            crab.waitForMininigExpeditionToBeFinished(); // you have to take this statement out for contnuity of teams
             crab.clickClaimButton();
             Thread.sleep(5000);
             this.confirmMetaMaskTransaction(mask);
             Thread.sleep(5000);
             try {
                 this.startMiningExpeditionsWorkflow();
+                Thread.sleep(5000);
+                this.testReinforceFunctionality();
             } catch (IOException e) {
                 e.printStackTrace();
             }
