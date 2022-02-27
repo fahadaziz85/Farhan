@@ -70,7 +70,9 @@ public class CrabadaPage extends BasePage {
             connectWalletLeftMenuButton.sendKeys(Keys.RETURN);
         }
     }
-
+    public void waitForOneHour() throws InterruptedException {
+        Thread.sleep(3600000); // wait for 1 hour in millisconds
+    }
     public void waitForMininigExpeditionToBeFinished() throws InterruptedException {
         // Right now this code is ideal for only one team
         Thread.sleep(14400000); // wait for 4 hours until finish button appears
@@ -88,6 +90,7 @@ public class CrabadaPage extends BasePage {
     public void clickReinforce() throws InterruptedException {
         List<WebElement> underAttack = driver.findElements(By.className("mine-status"));
 
+        // This functionality is to click Under Attack div area on mining team
         for (WebElement el: underAttack
              ) {
             System.out.println("innerHTML: " + el.getAttribute("innerHTML"));
@@ -103,29 +106,57 @@ public class CrabadaPage extends BasePage {
         driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL, Keys.END);
         driver.switchTo().defaultContent();
         //wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("shop-add")));
+        Thread.sleep(10000);
+        driver.navigate().refresh();
         Thread.sleep(5000);
-        List <WebElement> BtnList = driver.findElements(By.tagName("button"));
-        for (WebElement btn:BtnList
-             ) {
-            Thread.sleep(3000);
-            if (btn.getAttribute("innerHTML").contains("Add")){
-                btn.sendKeys(Keys.RETURN);
-                break;
+        underAttack = driver.findElements(By.className("mine-status"));
+
+        driver.navigate().refresh();
+        driver.switchTo().defaultContent();
+        Thread.sleep(5000);
+        WebElement reinforceArea = driver.findElement(By.className("time"));
+        if (reinforceArea.getAttribute("innerHTML").contains("Attack")){
+            Thread.sleep(100000);
+        }
+        driver.navigate().refresh();
+        driver.switchTo().defaultContent();
+        Thread.sleep(5000);
+        reinforceArea = driver.findElement(By.className("time"));
+        if (reinforceArea.getAttribute("innerHTML").contains("Reinforce")){
+            underAttack = driver.findElements(By.className("mine-status"));
+            for (WebElement el: underAttack
+            ) {
+                System.out.println("Under Attack div innerHTML: " + el.getAttribute("innerHTML"));
+                if (el.getAttribute("innerHTML").contains("Under Attack") ){
+                    new Actions(driver).moveToElement(el).click().perform();
+                    break;
+                }
+            }
+            Thread.sleep(5000);
+            List <WebElement> BtnList = driver.findElements(By.tagName("button"));
+            for (WebElement btn:BtnList
+            ) {
+                Thread.sleep(5000);
+                if (btn.getAttribute("innerHTML").contains("Add")){
+                    btn.sendKeys(Keys.RETURN);
+                    break;
+                }
+            }
+
+            // grab all the images in the given div then compare its src value and then select them
+            // wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("slick-list")));
+            ArrayList<String> popups = new ArrayList<String>(driver.getWindowHandles());
+            System.out.println("Popups handles size = " + popups.size());
+            //WebElement crabsList = driver.findElement(By.className("slick-list"));
+            WebElement firstCrab = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[1]/div/div/div"));
+            // WebElement secondCrab = crabsList.findElement(By.xpath("/html/body/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[2]/div/div/div"));
+            if (firstCrab.isDisplayed()){
+                new Actions(driver).moveToElement(firstCrab).click().perform();
+                WebElement addCrab = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/div/div[2]/div/div[2]/div[3]/div/div[2]/button"));
+                addCrab.click();
             }
         }
 
-        // grab all the images in the given div then compare its src value and then select them
-       // wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("slick-list")));
-        ArrayList<String> popups = new ArrayList<String>(driver.getWindowHandles());
-        System.out.println("Popups handles size = " + popups.size());
-        WebElement crabsList = driver.findElement(By.className("slick-list"));
-        WebElement firstCrab = crabsList.findElement(By.xpath("/html/body/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[1]/div/div/div"));
-       // WebElement secondCrab = crabsList.findElement(By.xpath("/html/body/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[2]/div/div/div"));
-        if (firstCrab.isDisplayed()){
-            new Actions(driver).moveToElement(firstCrab).click().perform();
-            WebElement addCrab = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/div/div[2]/div/div[2]/div[3]/div/div[2]/button"));
-            addCrab.click();
-        }
         // This logic can be used later but the upper side code is efficient
         /*List<WebElement> crabsListArray = crabsList.findElements(By.tagName("img"));
         System.out.println("Crabs list in reinforcement page has size: " + crabsListArray.size());

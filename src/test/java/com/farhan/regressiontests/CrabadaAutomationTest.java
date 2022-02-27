@@ -2,29 +2,32 @@ package com.farhan.regressiontests;
 
 import com.farhan.basetestframework.BaseClass;
 import com.farhan.pageobjects.CrabadaPage;
+import com.farhan.pageobjects.ManageTeamsPage;
 import com.farhan.pageobjects.MetaMaskPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
-import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.Test;
 
-import javax.servlet.annotation.WebListener;
 import java.io.IOException;
-import java.lang.management.ThreadInfo;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
 public class CrabadaAutomationTest extends BaseClass {
 
     private int counter = 0;
-
-
+    private String maxTeamSizeTakenFromManageTeamsPage;
+    private int maxTeamsSize;
     @Test(priority = 1)
     public void startMiningExpeditionsWorkflow() throws InterruptedException, IOException {
         CrabadaPage crab = new CrabadaPage(getDriver());
         MetaMaskPage mask = new MetaMaskPage(getDriver());
+        ManageTeamsPage teams = new ManageTeamsPage(getDriver());
+
+
+        // To login in Metamask extension when browser is opened for the first time
         if (counter == 0) {
             ((JavascriptExecutor) getDriver()).executeScript("window.open()");
             ArrayList<String> tabs = new ArrayList<String>(getDriver().getWindowHandles());
@@ -36,20 +39,31 @@ public class CrabadaAutomationTest extends BaseClass {
             Thread.sleep(3000);
             getDriver().close();
             getDriver().switchTo().window(tabs.get(0));  // switch back to parent window
-            crab.clickDashboard();
-            Thread.sleep(3000);
-            crab.clickMiningExpedition();
-            Thread.sleep(5000);
-
 
         }
-        /*crab.clickStartMiningExpeditionsBtn();
+
+        // Get the maximum team size from Manage Teams page
+        getDriver().get("https://play.crabada.com/game");
+        getDriver().switchTo().defaultContent();
+        maxTeamSizeTakenFromManageTeamsPage =  teams.getMaximumTeamSize(); //"(16/16)"
+        System.out.println("Maximum Teams Size: " + maxTeamSizeTakenFromManageTeamsPage);
+        maxTeamsSize = maxTeamSizeTakenFromManageTeamsPage.length();
+        String lastValue = maxTeamSizeTakenFromManageTeamsPage.substring(maxTeamSizeTakenFromManageTeamsPage.indexOf("/")+1 , maxTeamsSize -1);
+        System.out.println("Last value of Team size: " + lastValue);
+        maxTeamsSize = Integer.parseInt(lastValue); // Here you got the maximum team size on which you can loop around
+
+        crab.clickDashboard();
+        Thread.sleep(3000);
+        crab.clickMiningExpedition();
+        Thread.sleep(5000);
+        crab.clickStartMiningExpeditionsBtn();
         Thread.sleep(5000);
         crab.clickSelectBtn();
         this.confirmMetaMaskTransaction(mask);
         Thread.sleep(5000);
-        System.out.println("Counter value: "+ counter++);*/
-        getDriver().navigate().refresh();getDriver().navigate().refresh();
+        System.out.println("Counter value: "+ counter++);
+        getDriver().navigate().refresh();
+
 
 
 
@@ -66,18 +80,18 @@ public class CrabadaAutomationTest extends BaseClass {
             Thread.sleep(5000);
             WebElement reinforceArea = getDriver().findElement(By.className("mine-status"));
             if (reinforceArea.isDisplayed()) {
-                Thread.sleep(3000);
+                Thread.sleep(8000);
                 crab.clickReinforce();
                 Thread.sleep(5000);
                 this.confirmMetaMaskTransaction(mask);
-                Thread.sleep(5000);
+                Thread.sleep(10000);
                 getDriver().navigate().refresh();
                 getDriver().get("https://play.crabada.com/mine");
             }
         }
     }
 
-   // @Test(priority = 3)
+    @Test(priority = 3)
     public void claimRewardWorkFlow() throws InterruptedException, IOException {
         CrabadaPage crab = new CrabadaPage(getDriver());
         MetaMaskPage mask = new MetaMaskPage(getDriver());
@@ -94,13 +108,17 @@ public class CrabadaAutomationTest extends BaseClass {
             getDriver().switchTo().window(tabs.get(0));  // switch back to parent window
         }
         System.out.println("Counter value: "+ counter++);
-        while(true) { // here you have to check the condition with maximum number of teams which you can get from manage teams page
+        for(int i=0; counter<maxTeamsSize - 1; i++ ) { // here you have to check the condition with maximum number of teams which you can get from manage teams page
             getDriver().navigate().refresh();
-            crab.waitForMininigExpeditionToBeFinished(); // you have to take this statement out for contnuity of teams
-            crab.clickClaimButton();
-            Thread.sleep(5000);
-            this.confirmMetaMaskTransaction(mask);
-            Thread.sleep(5000);
+            //crab.waitForMininigExpeditionToBeFinished(); // you have to take this statement out for contnuity of teams
+            //crab.clickClaimButton();
+            Date date = new Date();
+            System.out.println("Started waiting for one hour" + date.getTime());
+            crab.waitForOneHour(); // Waiting for one hour to start next mining expedition
+            System.out.println("One hour wait ended");
+            Thread.sleep(1000);
+            //this.confirmMetaMaskTransaction(mask);
+            //Thread.sleep(5000);
             try {
                 this.startMiningExpeditionsWorkflow();
                 Thread.sleep(5000);
