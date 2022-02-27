@@ -95,6 +95,7 @@ public class CrabadaAutomationTest extends BaseClass {
     public void claimRewardWorkFlow() throws InterruptedException, IOException {
         CrabadaPage crab = new CrabadaPage(getDriver());
         MetaMaskPage mask = new MetaMaskPage(getDriver());
+        ManageTeamsPage teams = new ManageTeamsPage(getDriver());
         if (counter == 0) {
             ((JavascriptExecutor) getDriver()).executeScript("window.open()");
             ArrayList<String> tabs = new ArrayList<String>(getDriver().getWindowHandles());
@@ -108,7 +109,7 @@ public class CrabadaAutomationTest extends BaseClass {
             getDriver().switchTo().window(tabs.get(0));  // switch back to parent window
         }
         System.out.println("Counter value: "+ counter++);
-        for(int i=0; counter<maxTeamsSize - 1; i++ ) { // here you have to check the condition with maximum number of teams which you can get from manage teams page
+        for(int i=0; i<teams.getMaxiumTeamSize(); i++ ) { // here you have to check the condition with maximum number of teams which you can get from manage teams page
             getDriver().navigate().refresh();
             //crab.waitForMininigExpeditionToBeFinished(); // you have to take this statement out for contnuity of teams
             //crab.clickClaimButton();
